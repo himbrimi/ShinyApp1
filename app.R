@@ -11,11 +11,24 @@ library(shiny)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
-  "Hello, world!"
+  selectInput("dataset", label = "Dataset", choices = ls("package:datasets")),
+  verbatimTextOutput("summary"),
+  tableOutput("table")
 )
 # Define server logic 
 server <- function(input, output, session){
-  
+  # create a reactive expression for repeated code
+  dataset <- reactive({
+    dataset <- get(input$dataset, "package:datasets")
+  })
+  # Use reactive expression by calling it as a function
+  output$summary <- renderPrint({
+    summary(dataset())
+  })
+  output$table <- renderTable({
+    dataset()
+    
+  })
 }
     
 
